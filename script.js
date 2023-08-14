@@ -100,4 +100,4 @@ function updateTemperatureUnits() {
 }
 
 // Initial call to fetch the weather data for a default city when the page loads
-fetchForecast('New York'); // Replace 'New York' with the desired default city
+fetchForecast(); // Replace 'New York' with the desired default city
