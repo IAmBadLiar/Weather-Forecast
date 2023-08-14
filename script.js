@@ -40,11 +40,17 @@ async function fetchForecast(city) {
     dailyForecasts.forEach(forecast => {
       const forecastCard = document.createElement('div');
       forecastCard.className = 'forecast-card';
+      const tempMaxCelsius = forecast.main.temp_max;
+      const tempMinCelsius = forecast.main.temp_min;
+      const tempMaxFahrenheit = toFahrenheit(tempMaxCelsius);
+      const tempMinFahrenheit = toFahrenheit(tempMinCelsius);
+      const tempMax = isCelsius ? `${tempMaxCelsius.toFixed(1)}°C` : `${tempMaxFahrenheit.toFixed(1)}°F`;
+      const tempMin = isCelsius ? `${tempMinCelsius.toFixed(1)}°C` : `${tempMinFahrenheit.toFixed(1)}°F`;
+
       forecastCard.innerHTML = `
         <h3>${formatDate(forecast.dt)}</h3>
         <img src="http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png" alt="${forecast.weather[0].main}">
-        <p class="temp-max" data-temp="${forecast.main.temp_max}">${forecast.main.temp_max}°C</p>
-        <p class="temp-min" data-temp="${forecast.main.temp_min}">${forecast.main.temp_min}°C</p>
+        <p>${tempMax} / ${tempMin}</p>
         <p>${forecast.weather[0].description}</p>
       `;
       forecastCards.appendChild(forecastCard);
@@ -62,10 +68,10 @@ function formatDate(timestamp) {
 
 function updateTemperature(celsius) {
   if (isCelsius) {
-    temperature.textContent = `${celsius}°C`;
+    temperature.textContent = `${celsius.toFixed(1)}°C`;
   } else {
     const fahrenheit = toFahrenheit(celsius);
-    temperature.textContent = `${fahrenheit}°F`;
+    temperature.textContent = `${fahrenheit.toFixed(1)}°F`;
   }
 }
 
@@ -80,30 +86,17 @@ temperatureUnitToggle.addEventListener('click', () => {
 });
 
 function updateTemperatureUnits() {
-  const maxTemps = document.querySelectorAll('.forecast-card .temp-max');
-  const minTemps = document.querySelectorAll('.forecast-card .temp-min');
+  const maxMinTemps = document.querySelectorAll('.forecast-card p:nth-child(3)');
 
-  if (isCelsius) {
-    maxTemps.forEach(temp => {
-      const celsius = temp.getAttribute('data-temp');
-      temp.textContent = `${celsius}°C`;
-    });
-    minTemps.forEach(temp => {
-      const celsius = temp.getAttribute('data-temp');
-      temp.textContent = `${celsius}°C`;
-    });
-  } else {
-    maxTemps.forEach(temp => {
-      const celsius = temp.getAttribute('data-temp');
-      const fahrenheit = toFahrenheit(Number(celsius));
-      temp.textContent = `${fahrenheit}°F`;
-    });
-    minTemps.forEach(temp => {
-      const celsius = temp.getAttribute('data-temp');
-      const fahrenheit = toFahrenheit(Number(celsius));
-      temp.textContent = `${fahrenheit}°F`;
-    });
-  }
+  maxMinTemps.forEach(tempElement => {
+    const tempText = tempElement.textContent;
+    const tempCelsius = parseFloat(tempText); // Assuming the first part of the text is the temperature
+    if (!isNaN(tempCelsius)) {
+      const tempFahrenheit = toFahrenheit(tempCelsius);
+      const updatedTempText = isCelsius ? `${tempCelsius.toFixed(1)}°C` : `${tempFahrenheit.toFixed(1)}°F`;
+      tempElement.textContent = updatedTempText;
+    }
+  });
 }
 
 // Initial call to fetch the weather data for a default city when the page loads
