@@ -2,6 +2,8 @@ const apiKey = '09db4dfa1b7156cbdce6c6dd6500354b'; // Replace with your actual A
 const searchBtn = document.getElementById('searchBtn');
 const cityName = document.getElementById('cityName');
 const temperature = document.getElementById('temperature');
+const humidity = document.getElementById('humidity');
+const windSpeed = document.getElementById('windSpeed');
 const description = document.getElementById('description');
 const weatherIcon = document.getElementById('weatherIcon');
 const forecastCards = document.getElementById('forecastCards');
@@ -17,6 +19,8 @@ searchBtn.addEventListener('click', async () => {
 
       cityName.textContent = data.name;
       updateTemperature(data.main.temp);
+      humidity.textContent = `Humidity: ${data.main.humidity}%`;
+      windSpeed.textContent = `Wind Speed: ${data.wind.speed.toFixed(1)} m/s`;
       description.textContent = data.weather[0].description;
 
       const iconCode = data.weather[0].icon;
@@ -52,6 +56,8 @@ async function fetchForecast(city) {
         <img src="http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png" alt="${forecast.weather[0].main}">
         <p>${tempMax} / ${tempMin}</p>
         <p>${forecast.weather[0].description}</p>
+        <p>Humidity: ${forecast.main.humidity}%</p>
+        <p>Wind Speed: ${forecast.wind.speed.toFixed(1)} m/s</p>
       `;
       forecastCards.appendChild(forecastCard);
     });
@@ -87,6 +93,8 @@ temperatureUnitToggle.addEventListener('click', () => {
 
 function updateTemperatureUnits() {
   const maxMinTemps = document.querySelectorAll('.forecast-card p:nth-child(3)');
+  const humidities = document.querySelectorAll('.forecast-card p:nth-child(4)');
+  const windSpeeds = document.querySelectorAll('.forecast-card p:nth-child(5)');
 
   maxMinTemps.forEach(tempElement => {
     const tempText = tempElement.textContent;
@@ -97,7 +105,26 @@ function updateTemperatureUnits() {
       tempElement.textContent = updatedTempText;
     }
   });
+
+  humidities.forEach(humidityElement => {
+    const humidityText = humidityElement.textContent;
+    const humidityValue = parseInt(humidityText.replace('Humidity: ', '').replace('%', ''));
+    if (!isNaN(humidityValue)) {
+      const updatedHumidityText = `Humidity: ${humidityValue}%`;
+      humidityElement.textContent = updatedHumidityText;
+    }
+  });
+
+  windSpeeds.forEach(windSpeedElement => {
+    const windSpeedText = windSpeedElement.textContent;
+    const windSpeedValue = parseFloat(windSpeedText.replace('Wind Speed: ', '').replace(' m/s', ''));
+    if (!isNaN(windSpeedValue)) {
+      const updatedWindSpeedText = `Wind Speed: ${windSpeedValue.toFixed(1)} m/s`;
+      windSpeedElement.textContent = updatedWindSpeedText;
+    }
+  });
 }
 
 // Initial call to fetch the weather data for a default city when the page loads
-fetchForecast(); // Replace 'New York' with the desired default city
+fetchForecast('New York'); // Replace 'New York' with the desired default city
+      
