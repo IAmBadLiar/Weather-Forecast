@@ -99,5 +99,24 @@ function updateTemperatureUnits() {
   });
 }
 
+  humidities.forEach(humidityElement => {
+    const humidityText = humidityElement.textContent;
+    const humidityValue = parseInt(humidityText.replace('Humidity: ', '').replace('%', ''));
+    if (!isNaN(humidityValue)) {
+      const updatedHumidityText = `Humidity: ${humidityValue}%`;
+      humidityElement.textContent = updatedHumidityText;
+    }
+  });
+
+  windSpeeds.forEach(windSpeedElement => {
+    const windSpeedText = windSpeedElement.textContent;
+    const windSpeedValue = parseFloat(windSpeedText.replace('Wind Speed: ', '').replace(' m/s', ''));
+    if (!isNaN(windSpeedValue)) {
+      const updatedWindSpeedText = `Wind Speed: ${windSpeedValue.toFixed(1)} m/s`;
+      windSpeedElement.textContent = updatedWindSpeedText;
+    }
+  });
+}
+
 // Initial call to fetch the weather data for a default city when the page loads
 fetchForecast(); // Replace 'New York' with the desired default city
