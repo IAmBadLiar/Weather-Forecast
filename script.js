@@ -52,7 +52,9 @@ async function fetchForecast(city) {
         <img src="http://openweathermap.org/img/wn/${forecast.weather[0].icon}.png" alt="${forecast.weather[0].main}">
         <p>${tempMax} / ${tempMin}</p>
         <p>${forecast.weather[0].description}</p>
-      `;
+       
+<p>Humidity: ${forecast.main.humidity}%</p>
+        <p>Wind Speed: ${forecast.wind.speed.toFixed(1)} m/s</p>      `;
       forecastCards.appendChild(forecastCard);
     });
     updateTemperatureUnits();
