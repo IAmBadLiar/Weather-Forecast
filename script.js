@@ -2,6 +2,9 @@ const apiKey = '09db4dfa1b7156cbdce6c6dd6500354b'; // Replace with your actual A
 const searchBtn = document.getElementById('searchBtn');
 const cityName = document.getElementById('cityName');
 const temperature = document.getElementById('temperature');
+
+const humidity = document.getElementById('humidity');
+const windSpeed = document.getElementById('windSpeed');
 const description = document.getElementById('description');
 const weatherIcon = document.getElementById('weatherIcon');
 const forecastCards = document.getElementById('forecastCards');
@@ -17,7 +20,11 @@ searchBtn.addEventListener('click', async () => {
 
       cityName.textContent = data.name;
       updateTemperature(data.main.temp);
+
+humidity.textContent = `Humidity: ${data.main.humidity}%`;
+      windSpeed.textContent = `Wind Speed: ${data.wind.speed.toFixed(1)} m/s`;
       description.textContent = data.weather[0].description;
+
 
       const iconCode = data.weather[0].icon;
       weatherIcon.src = `http://openweathermap.org/img/wn/${iconCode}.png`;
